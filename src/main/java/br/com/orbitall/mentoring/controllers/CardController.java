@@ -6,10 +6,9 @@ import br.com.orbitall.mentoring.models.Card;
 import br.com.orbitall.mentoring.services.CardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 /*
     GET     /cards          Pending...
@@ -51,5 +50,15 @@ public class CardController {
 
         log.info("Response info {}", output);
         return output;
+    }
+
+    @GetMapping
+    public Iterable<Card> list() {
+        return this.service.list();
+    }
+
+    @GetMapping("/{id}")
+    public Card selectById(@PathVariable UUID id) {
+        return service.retrieve(id);
     }
 }

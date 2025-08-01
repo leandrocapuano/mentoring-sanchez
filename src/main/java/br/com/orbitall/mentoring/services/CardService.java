@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,5 +27,13 @@ public class CardService {
         log.info("Model info {}", card);
 
         return this.repository.save(card);
+    }
+
+    public Iterable<Card> list() {
+        return this.repository.findAll();
+    }
+
+    public Card retrieve(UUID id) {
+        return repository.findById(id).get();
     }
 }
