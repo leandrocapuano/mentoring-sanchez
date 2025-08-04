@@ -36,4 +36,30 @@ public class CardService {
     public Card retrieve(UUID id) {
         return repository.findById(id).get();
     }
+
+    public Card update(UUID id, Card card) {
+        Card fetched = retrieve(id);
+
+        fetched.setFullName(card.getFullName());
+        fetched.setNumber(card.getNumber());
+        fetched.setCvv2(card.getCvv2());
+        fetched.setValidThru(card.getValidThru());
+        fetched.setUpdatedAt(LocalDateTime.now());
+
+        log.info("Model info {}", fetched);
+
+        return repository.save(fetched);
+    }
+
+    public Card delete(UUID id) {
+        Card fetched = retrieve(id);
+
+        fetched.setStatus(false);
+        fetched.setUpdatedAt(LocalDateTime.now());
+
+        log.info("Model info {}", fetched);
+
+        return repository.save(fetched);
+
+    }
 }

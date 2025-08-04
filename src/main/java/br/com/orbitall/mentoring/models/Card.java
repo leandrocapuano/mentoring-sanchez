@@ -3,6 +3,7 @@ package br.com.orbitall.mentoring.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,12 +19,16 @@ import java.util.UUID;
 @Builder
 @Data
 public class Card {
-    @Id private UUID id;
+    @Id
+    private UUID id;
+    @Version
+    private int version;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private boolean status;
+
     private String fullName;
     private String number;
     private String cvv2;
     private String validThru;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private boolean status;
 }
