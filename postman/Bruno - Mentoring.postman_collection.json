@@ -56,7 +56,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"fullName\": \"{{$randomFullName}}\",\n    \"number\": \"${{generatedCardNumber}}\",\n    \"cvv2\": \"{{$randomInt}}\",\n    \"validThru\": \"{{$randomDateFuture}}\"\n}",
+					"raw": "{\n    \"fullName\": \"{{$randomFullName}}\",\n    \"number\": \"{{generatedCardNumber}}\",\n    \"cvv2\": \"{{$randomInt}}\",\n    \"validThru\": \"{{$randomDateFuture}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -106,6 +106,61 @@
 			"name": "Retrieve by Id - Card",
 			"request": {
 				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8080/cards/{{CARD_ID}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"cards",
+						"{{CARD_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update by Id - Card",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"{{$randomFullName}}\",\n    \"number\": \"${{generatedCardNumber}}\",\n    \"cvv2\": \"{{$randomInt}}\",\n    \"validThru\": \"{{$randomDateFuture}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/cards/{{CARD_ID}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"cards",
+						"{{CARD_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete by Id - Card",
+			"request": {
+				"method": "DELETE",
 				"header": [],
 				"url": {
 					"raw": "http://127.0.0.1:8080/cards/{{CARD_ID}}",
