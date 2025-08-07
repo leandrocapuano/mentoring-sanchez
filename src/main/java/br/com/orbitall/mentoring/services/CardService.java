@@ -1,12 +1,20 @@
 package br.com.orbitall.mentoring.services;
 
+import br.com.orbitall.mentoring.canonicals.CardInput;
+import br.com.orbitall.mentoring.canonicals.CardOutput;
+import br.com.orbitall.mentoring.exceptions.ResourceNotFoundException;
 import br.com.orbitall.mentoring.models.Card;
 import br.com.orbitall.mentoring.repositories.CardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import static br.com.orbitall.mentoring.utilities.MapperUtil.toCanonical;
+import static br.com.orbitall.mentoring.utilities.MapperUtil.toModel;
 
 @Service
 @Slf4j
@@ -17,7 +25,9 @@ public class CardService {
         this.repository = repository;
     }
 
-    public void save(Card card) {
+    public CardOutput save(CardInput input) {
+        Card card = toModel(input);
+
         LocalDateTime now = LocalDateTime.now();
 
         card.setStatus(true);
@@ -25,40 +35,50 @@ public class CardService {
         card.setUpdatedAt(now);
         card.setId(UUID.randomUUID());
 
-        repository.save(card);
+        return toCanonical(repository.save(card));
     }
 
-    public Iterable<Card> list() {
-        return this.repository.findAll();
+    public List<CardOutput> findAll() {
+        List<CardOutput> list = new ArrayList<>();
+
+        repository.findAll().forEach(card -> list.add(toCanonical(card)));
+
+        //StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList()).stream().map();
+
+        return list;
+
     }
 
-    public Card retrieve(UUID id) {
-        return repository.findById(id).get();
+    public CardOutput findById(UUID id) {
+        Card card = repository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found the resource (id: " + id + ")"));
+
+        return toCanonical(card);
     }
 
-    public Card update(UUID id, Card card) {
-        Card fetched = retrieve(id);
+    public CardOutput update(UUID id, CardInput input) {
+        Card fetched = repository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found the resource (id: " + id + ")"));
 
-        fetched.setFullName(card.getFullName());
-        fetched.setNumber(card.getNumber());
-        fetched.setCvv2(card.getCvv2());
-        fetched.setValidThru(card.getValidThru());
+        fetched.setFullName(input.fullName());
+        fetched.setNumber(input.number());
+        fetched.setCvv2(input.cvv2());
+        fetched.setValidThru(input.validThru());
         fetched.setUpdatedAt(LocalDateTime.now());
 
-        log.info("Model info {}", fetched);
-
-        return repository.save(fetched);
+        return toCanonical(repository.save(fetched));
     }
 
-    public Card delete(UUID id) {
-        Card fetched = retrieve(id);
+    public CardOutput delete(UUID id) {
+        Card fetched = repository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found the resource (id: " + id + ")"));
 
         fetched.setStatus(false);
         fetched.setUpdatedAt(LocalDateTime.now());
 
-        log.info("Model info {}", fetched);
-
-        return repository.save(fetched);
-
+        return toCanonical(repository.save(fetched));
     }
 }
