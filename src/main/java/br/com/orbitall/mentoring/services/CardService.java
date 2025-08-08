@@ -43,8 +43,7 @@ public class CardService {
 
         repository.findAll().forEach(card -> list.add(toCanonical(card)));
 
-        //StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList()).stream().map();
-
+       
         return list;
 
     }
