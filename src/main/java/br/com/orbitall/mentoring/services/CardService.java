@@ -41,21 +41,19 @@ public class CardService {
     public List<CardOutput> findAll() {
         List<CardOutput> list = new ArrayList<>();
 
-        repository.findAll().forEach(card -> list.add(toCanonical(card)));
+        repository.findAll().forEach(card -> {
+            if (card.isStatus()) {
+                list.add(toCanonical(card));
+            }
+        });
 
-       
         return list;
-
     }
 
     public CardOutput findById(UUID id) {
-        Card card = repository
-                .findById(id)
+        Card card = repository.findById(id)
+                .filter(Card::isStatus)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found the resource (id: " + id + ")"));
-
-        if (!card.isStatus()) {
-            throw new ResourceNotFoundException("Not found the resource (id: " + id + ")");
-        }
 
         return toCanonical(card);
     }
