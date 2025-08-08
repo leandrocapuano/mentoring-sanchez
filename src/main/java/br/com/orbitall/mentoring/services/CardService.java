@@ -54,6 +54,10 @@ public class CardService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found the resource (id: " + id + ")"));
 
+        if (!card.isStatus()) {
+            throw new ResourceNotFoundException("Not found the resource (id: " + id + ")");
+        }
+
         return toCanonical(card);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
@@ -55,5 +56,16 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        Map<String, String> error = new HashMap<>();
+
+        var message = "Not found the resource (id: " + e.getValue() + ")";
+        error.put("message", message );
+        log.error(message);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }
